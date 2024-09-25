@@ -1,0 +1,51 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.card {
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+}
+
+h1 {
+    color: #007bff;
+}
+
+#result {
+    font-size: 24px;
+    color: #17a2b8;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+#conversion-history {
+    margin-top: 20px;
+}
+
+#conversion-history li {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background-color: #e9ecef;
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 15px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+}

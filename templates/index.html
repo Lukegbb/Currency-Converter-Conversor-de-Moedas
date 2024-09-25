@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Moedas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+            <h1 class="text-center text-primary mb-4">Conversor de Moedas</h1>
+
+            <form id="convert-form" class="row g-3">
+                <div class="col-md-4">
+                    <label for="base-currency" class="form-label">De:</label>
+                    <select id="base-currency" class="form-select" name="base">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="BRL">BRL</option>
+                        <!-- Adicione mais moedas aqui -->
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="target-currency" class="form-label">Para:</label>
+                    <select id="target-currency" class="form-select" name="target">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="BRL">BRL</option>
+                        <!-- Adicione mais moedas aqui -->
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="amount" class="form-label">Valor:</label>
+                    <input type="number" id="amount" class="form-control" name="amount" required>
+                </div>
+
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-lg btn-success">Converter</button>
+                </div>
+            </form>
+
+            <div class="mt-4">
+                <h2 class="text-center text-info" id="result"></h2>
+                <p id="error-message" class="text-center text-danger"></p>
+            </div>
+
+            <h3 class="text-center mt-4">Histórico de Conversões</h3>
+            <ul id="conversion-history" class="list-group"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('convert-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const baseCurrency = document.getElementById('base-currency').value;
+            const targetCurrency = document.getElementById('target-currency').value;
+            const amount = document.getElementById('amount').value;
+
+            fetch('/convert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    base: baseCurrency,
+                    target: targetCurrency,
+                    amount: amount
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.converted_amount) {
+                    const resultText = `Valor convertido: ${data.converted_amount} ${targetCurrency}`;
+                    document.getElementById('result').textContent = resultText;
+                    document.getElementById('error-message').textContent = '';
+
+                    // Adiciona a conversão ao histórico
+                    const historyItem = document.createElement('li');
+                    historyItem.textContent = resultText;
+                    historyItem.classList.add('list-group-item');
+                    document.getElementById('conversion-history').appendChild(historyItem);
+                } else {
+                    document.getElementById('result').textContent = '';
+                    document.getElementById('error-message').textContent = data.error || 'Erro ao converter moeda.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = '';
+                document.getElementById('error-message').textContent = 'Erro na requisição. Tente novamente mais tarde.';
+            });
+        });
+    </script>
+</body>
+</html>
